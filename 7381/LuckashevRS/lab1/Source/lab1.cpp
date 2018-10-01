@@ -5,21 +5,21 @@
 
 //Global variables
 int depth = 0; //recursive depth
-std::ofstream interData("Data.txt", std::ofstream::out); //internal data file
-std::ofstream output("output.txt", std::ofstream::out); //output file
+std::ofstream interData("Data.txt", std::ofstream::out);
+std::ofstream output("output.txt", std::ofstream::out);
 enum error_code {EMPTY, EXCESS, INVALID_SC, MISS_S_CL, MISS_S, MISS_R_CL, MISS_R, MISS_F_CL, MISS_F};
 enum internal_op_code {ERROR, ENTER_B, EXIT_B, ENTER_S, EXIT_S, ENTER_R, EXIT_R, ENTER_F, EXIT_F};
-//................
-//Function definitions
-void error(error_code code);			//Displays error message
-void interDataGen(internal_op_code op_code); //Fills file Data.txt with intermediate data (algorithm work)
-void displayFileContents();     //Displays input file contents
 
-bool isBracket();		//Bracket ::= Square | Round | Figure
-bool isSquare();		//Square  ::= [Round Figure]  | +
-bool isRound();			//Round   ::= (Figure Square) | -
-bool isFigure();		//Figure  ::= {Square Round}  | 0
-//................
+//Function definitions
+void error(error_code code); 				//Displays error message
+void interDataGen(internal_op_code op_code);//Fills file Data.txt with intermediate data (algorithm work)
+void displayFileContents(); 				//Displays input file contents
+
+bool isBracket(); 		//Bracket ::= Square | Round | Figure
+bool isSquare(); 		//Square  ::= [Round Figure]  | +
+bool isRound(); 		//Round   ::= (Figure Square) | -
+bool isFigure(); 		//Figure  ::= {Square Round}  | 0
+
 //Function implementations
 bool isBracket(){
 	interDataGen(ENTER_B);
@@ -213,14 +213,11 @@ void displayFileContents(){
 	}
 	std::cout << "\n-end-\n";
 }
-//................
 
 int main(int argc, char* argv[]){
 	if(argc == 2){ //true: input from file. false: input from console
 		std::cout << "The program is launched in file input mode.\n";
-		std::cout << "To launch a program in console input mode, drag input file on .exe file.\n";
 
-		//redirect input stream into a file
 		std::freopen(argv[1], "r", stdin);
 
 		displayFileContents();
@@ -230,18 +227,23 @@ int main(int argc, char* argv[]){
 		rewind(stdin);
 	} else { //input from console
 		std::cout << "The program is launched in console input mode.\n";
+		std::cout << "To launch a program in file input mode, drag input file on executable file, or pass a path to input file as an argument (if launching from terminal/console).\n";
 		std::cout << "Enter a string of characters to start a syntax analysis for Brackets:\n";
 		}
+		
 	char c = std::cin.get();
 	if(std::cin.eof() || (c == '\n' && argc != 2)){ //true: empty input. false: input is not empty
-		error(EMPTY); //empty input
+		error(EMPTY);
 	} else { //input is not empty, proceed.
 		std::ungetc(c, stdin);
 		if (isBracket()){
 			interDataGen(EXIT_B);
 			c = std::cin.get();
-			if((!std::cin.eof() && argc == 2) || (c !='\n' && argc != 2)) { std::cout << c; output << c; error(EXCESS); } //excess characters
-			else{
+			if((!std::cin.eof() && argc == 2) || (c !='\n' && argc != 2)) {//true: there is one or more characters left in input stream. false: end of input.
+				std::cout << c;
+				output << c;
+				error(EXCESS);
+				} else {
 				std::cout << "\nThis is a Bracket";
 				output << "\nThis is a Bracket";
 			}
