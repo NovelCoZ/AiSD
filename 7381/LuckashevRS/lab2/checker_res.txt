@@ -1,0 +1,206 @@
+correct test Tests/Correct/1.addition.txt:
+File contents:
+-begin-
+x
+(+ x y z)
+-end-
+Met +-
+Met var
+Met var
+Met diff
+Exiting +-
+derivative:
+( + 1 0 0 ) 
+ 
+correct test Tests/Correct/2.substraction.txt:
+File contents:
+-begin-
+x
+(- a b c x)
+-end-
+Met +-
+Met diff
+Met var
+Met var
+Met var
+Exiting +-
+derivative:
+( - 0 0 0 1 ) 
+ 
+correct test Tests/Correct/3.multiplication.txt:
+File contents:
+-begin-
+x
+(* a b x)
+-end-
+Met *
+Met var
+Met var
+Met diff
+Exiting *
+derivative:
+( + ( * 0 b x ) ( * a 0 x ) ( * a b 1 ) ) 
+ 
+correct test Tests/Correct/4.power.txt:
+File contents:
+-begin-
+x
+(^ x 5)
+-end-
+Met ^
+Met const
+Met diff
+Exiting ^
+derivative:
+( + ( * 5 ( ^ x ( - 5 1 ) ) 1 ) ( * ( ^ x 5 ) 0 ln x ) ) 
+ 
+correct test Tests/Correct/5.power(long).txt:
+File contents:
+-begin-
+x
+(^ x (* 3 x) )
+-end-
+Met ^
+Met *
+Met const
+Met diff
+Exiting *
+Met diff
+Exiting ^
+derivative:
+( + ( * ( * 3 x ) ( ^ x ( - ( * 3 x ) 1 ) ) 1 ) ( * ( ^ x ( * 3 x ) ) ( + ( * 0 x ) ( * 3 1 ) ) ln x ) ) 
+ 
+correct test Tests/Correct/6.exp.txt:
+File contents:
+-begin-
+x
+exp(x)
+-end-
+Met exp
+Met diff
+Exiting exp
+derivative:
+( * 1 exp( x ) ) 
+ 
+correct test Tests/Correct/7.exp(long).txt:
+File contents:
+-begin-
+x
+exp(* 3 x)
+-end-
+Met exp
+Met *
+Met const
+Met diff
+Exiting *
+Exiting exp
+derivative:
+( * ( + ( * 0 x ) ( * 3 1 ) ) exp( * 3 x ) ) 
+ 
+correct test Tests/Correct/8.big_test.txt:
+File contents:
+-begin-
+x
+( * ( + a b x) (^ c exp(x) ) y (- x) )
+-end-
+Met *
+Met +-
+Met diff
+Met var
+Met var
+Exiting +-
+Met ^
+Met exp
+Met diff
+Exiting exp
+Met var
+Exiting ^
+Met var
+Met +-
+Met diff
+Exiting +-
+Exiting *
+derivative:
+( + ( * ( + 0 0 1 ) ( ^ c exp( x ) ) y ( - x ) ) ( * ( + a b x ) ( + ( * exp( x ) ( ^ c ( - exp( x ) 1 ) ) 0 ) ( * ( ^ c exp( x ) ) ( * 1 exp( x ) ) ln c ) ) y ( - x ) ) ( * ( + a b x ) ( ^ c exp( x ) ) 0 ( - x ) ) ( * ( + a b x ) ( ^ c exp( x ) ) y ( - 1 ) ) ) 
+ 
+incorrect test Tests/Incorrect/1.incorrect_variable.txt:
+File contents:
+-begin-
++
+(* a b)
+-end-
+
+! - Expected variable or constant as an argument
+ 
+incorrect test Tests/Incorrect/2.extra_characters.txt:
+File contents:
+-begin-
+x
+(+ a b) c
+-end-
+
+! - Excess characters
+ 
+incorrect test Tests/Incorrect/3.not_enough_args.txt:
+File contents:
+-begin-
+x
+(* x)
+-end-
+
+! - Not enough arguments
+ 
+incorrect test Tests/Incorrect/4.too_many_args.txt:
+File contents:
+-begin-
+x
+exp( x y )
+-end-
+
+! - Too many arguments
+ 
+incorrect test Tests/Incorrect/5.deep_error.txt:
+File contents:
+-begin-
+x
+(* a b c (^ x (+ x y (^ exp(x) (^ a b c) ) ) ) )
+-end-
+
+! - Too many arguments
+ 
+incorrect test Tests/Incorrect/6.no_operation.txt:
+File contents:
+-begin-
+x
+exp(   (    (* a x)          )   )
+-end-
+
+! - Expected operation
+ 
+incorrect test Tests/Incorrect/7.operation_as_an_argument.txt:
+File contents:
+-begin-
+x
+(* a b - c)
+-end-
+
+! - Unexpected symbol
+ 
+incorrect test Tests/Incorrect/8.missing_closing_bracket.txt:
+File contents:
+-begin-
+x
+(^ a b
+-end-
+
+! - Expected closing bracket
+ 
+incorrect test Tests/Incorrect/9.missing_opening_bracket.txt:
+File contents:
+-begin-
+x
+exp x
+-end-
+
+! - Expected opening bracket
+ 
