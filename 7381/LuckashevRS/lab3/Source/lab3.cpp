@@ -12,6 +12,7 @@ void printLine(stack<char>* s) {
 	while (!s->empty()) {
 		c = s->pop();
 		inter_data << "pop [" << c << ']' << std::endl;
+		//skip first \n
 		if (c == '\n') continue;
 		std::cout << c;
 		out << c;
@@ -38,11 +39,11 @@ void displayFileContents(std::istream* in) {
 }
 
 int main(int argc, char* argv[]) {
-	if (argc == 1) {
+	//check input
+	if (argc == 1) { // console (no input)
 		std::cout << "Please, open this application with input file as an argument (drag the input file onto executable file).\n";
 		return 0;
-	}
-	else {
+	} //file
 		input.open(argv[1], std::ifstream::in);
 		displayFileContents(&input);
 		input.clear();
@@ -60,7 +61,7 @@ int main(int argc, char* argv[]) {
 		c = input.get();
 		if(s.top() == '\n') printLine(&s);
 	}
-	
+	//print last line (in case there's no \n in the end)
 	printLine(&s);
 #ifdef _WIN32
 	system("PAUSE");
